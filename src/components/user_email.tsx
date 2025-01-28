@@ -74,7 +74,7 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
 
 
     return (
-        <section className="flex items-center p-4 md:p-12 shadow-lg flex-col rounded-lg bg-[#f8f7ee] text-black  w-full max-w-2xl min-h-[400px] self-center justify-items-center">
+        <section className="flex items-center p-4 md:p-12 shadow-lg flex-col rounded-lg bg-[#f8f7ee] text-black  w-full max-w-2xl min-h-[350px] self-center justify-items-center">
             <p className="font-sub mb-6">
                 While we search, signup to keep in the loop on all things baby names!
             </p>
@@ -90,7 +90,7 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
                             <input onChange={updateInputOnChange} onFocus={updateInputOnFocus} placeholder="Your email" type="email" name="email" id="email" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 font-[400] rounded-full w-[100%] border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px]" />
                         </label>
                     </div>
-                    <button type="submit" className="w-fit px-[1rem] h-[3rem] bg-cyan-500 rounded-full text-black md:self-end">
+                    <button type="submit" className="w-fit px-[1rem] h-[3rem] bg-[#6b6ea5] rounded-full self-center font-[700] text-white tracking-tight text-[14px] md:self-end">
                         Save
                     </button>
                 </div>
@@ -105,8 +105,7 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
             </form>
             {
                 delay ? 
-                    <button className="outline-none self-center w-[100%] text-center text-sky-500 font-medium" onClick={moveToNextStep}>
-                    No thanks, show me the names! </button>
+                    <p></p>
                     : 
                         <p className="text-center inline">
                             Searching the galaxy of baby names, just a moment!
