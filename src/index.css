@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Secular+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    @font-face {
+        font-family: 'Copper';
+        src: url("/Cooper\ Light\ BT.ttf");
+    }
+
+    @font-face {
+        font-family: 'Futura';
+        src: url("/futura\ medium\ bt.ttf");
+    }
+}
+link[rel~="icon"] {
+    width: 48px;
+    height: 48px;
+  }
+
+  select {
+   background-image:  linear-gradient(45deg,transparent 50%,currentColor 0),linear-gradient(135deg,currentColor 50%,transparent 0);
+   background-position: calc(100% - 20px) calc(1px + 50%),calc(100% - 16.1px) calc(1px + 50%);
+   background-size: 4px 4px,4px 4px;
+   background-repeat: no-repeat;
+  }
+
+  input[type="date"] {
+    -webkit-appearance: none; /* For Webkit browsers like Chrome and Safari */
+    -moz-appearance: none; /* For Firefox */
+    appearance: none; /* Standard syntax */
+  }
