@@ -233,7 +233,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
                 id="due_date"
                 value={formData.due_date}
                 onChange={updateInput}
-                className="focus:outline-2 focus:outline-gray-300 outline-none h-[54px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] cursor-pointer appearance-none font-sub text-[14px]"
+                className="focus:outline-2 focus:outline-gray-300 outline-none h-[47px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] cursor-pointer appearance-none font-sub text-[14px]"
               />
               {/* Calendar icon */}
               <div
