@@ -75,13 +75,13 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
                 Behold! Enchanting baby names we've found just for you:
             </h1>
             <AnimatedList items={names} />
-            <div className="flex gap-3 sm:gap-4 w-[100%] flex-col sm:flex-row justify-center items-center">
-                <button  className="w-fit px-[0.75rem] text-[0.875rem] h-[2rem] min-h-[2rem] bg-[#6b6ea5] rounded-full justify-center text-white flex gap-4 items-center font-[600]">
+            <div className="flex gap-3 w-[100%] flex-col sm:flex-row justify-center items-center">
+                <button className="w-fit px-[0.75rem] text-[0.875rem] h-[2rem] min-h-[2rem] bg-[#6b6ea5] rounded-full justify-center text-white flex gap-4 items-center font-[600]">
                     <GoPlusCircle className="w-4 h-4 text-white" />
                     Show me more
                 </button>
-                <button onClick={backToForm}  className="w-fit px-[0.75rem] text-[0.875rem] h-[2rem] min-h-[2rem] bg-[#6b6ea5] rounded-full justify-center text-white  flex gap-4  font-[600] items-center">
-                    <FaRepeat className="w-4 h-4 text-white" />
+                <button onClick={backToForm} className="w-fit px-[0.75rem] text-[0.875rem] h-[2rem] min-h-[2rem] bg-[#6b6ea5] rounded-full justify-center text-white  flex gap-4  font-[600] items-center">
+                    <FaRepeat className="w-3 h-3 text-white" />
                     Start Over
                 </button>
             </div>

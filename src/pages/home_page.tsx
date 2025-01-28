@@ -25,7 +25,7 @@ const HomePage = () => {
         allComponents[step]
       }
       <p className="capitalize font-sub font-medium flex items-center gap-0">
-        <img src="/link_icon.png" alt="MOI" className="w-14 h-14" /> <Link to={'https://motherofinvention.com/'} target="_blank"  className="-translate-x-2 underline">Mother of Invention - Innovative Baby</Link>
+        <img src="/Favicon_moi.png" alt="moi" className="w-5 h-5" />&nbsp;<Link to={'https://motherofinvention.com/'} target="_blank"  className="-translate-x-2 underline">Mother of Invention - Innovative Baby Products</Link>
       </p>
     </main>
   )
