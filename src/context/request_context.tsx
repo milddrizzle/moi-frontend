@@ -12,12 +12,19 @@ export interface FormDataType {
   version: string;
 }
 
+export interface ResponseDataType {
+  names: string[],
+  zodiacSign: ''
+}
+
 // Define types for the context state
 export interface RequestContextType {
-  requestQuery: string;
-  setRequestQuery: (query: string) => void;
   formData: FormDataType;
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
+  responseData: ResponseDataType
+  setResponseData: React.Dispatch<React.SetStateAction<ResponseDataType>>
+  loading: boolean
+  setLoading: (loading: boolean) => void
 }
 
 // Create the context with a default value of undefined
@@ -25,8 +32,6 @@ export const RequestContext = createContext<RequestContextType | undefined>(unde
 
 // Create the provider component
 const RequestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // This state controls the query to be sent to db
-  const [requestQuery, setRequestQuery] = useState('');
   
   // This state holds the form data
   const [formData, setFormData] = useState<FormDataType>({
@@ -40,7 +45,16 @@ const RequestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     version: ''
   });
 
-  const value = { requestQuery, setRequestQuery, formData, setFormData };
+  // state to access response data from db
+  const [responseData, setResponseData] = useState<ResponseDataType>({
+    names: [''],
+    zodiacSign: ''
+  })
+
+  // state to indicate loading state of request query
+  const [loading, setLoading] = useState(false)
+
+  const value = { formData, setFormData, responseData, setResponseData, loading, setLoading };
 
   return (
     <RequestContext.Provider value={value}>

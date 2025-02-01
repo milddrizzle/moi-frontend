@@ -4,7 +4,7 @@ import useRequestContext from "../hooks/use_request_context"
 import { FaRegCalendar } from "react-icons/fa6"
 
 const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<number>>}) => {
-    const { formData, setFormData } = useRequestContext()
+    const { formData, setFormData, setLoading } = useRequestContext()
     const fromPicker = useRef<HTMLInputElement>(null)
     const toPicker = useRef<HTMLInputElement>(null)
 
@@ -16,13 +16,6 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
       // Trigger the native input's click event
       if (fromPicker.current) {
         fromPicker.current.showPicker(); // Only supported in modern browsers
-      }
-    };
-
-    const handleOpenCalendar2 = () => {
-      // Trigger the native input's click event
-      if (toPicker.current) {
-        toPicker.current.showPicker(); // Only supported in modern browsers
       }
     };
 
@@ -53,7 +46,8 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        setStep(1)
+        setLoading(true) // set loading to true to initiate data fetching
+        localStorage.getItem('saved_email') ? setStep(2) : setStep(1) // check if user already has email saved - then move straight to waiting page
     }
 
 
@@ -105,7 +99,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main py-[0.5rem] font-bold">
               What is your preferred name origin?
             </h2>
-            <select tabIndex={0} name="name_origin" id="name_origin" className="cursor-pointer focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px] max-w-xs" value={formData.name_origin} onChange={updateSelectItems}>
+            <select tabIndex={0} name="name_origin" id="name_origin" className="cursor-pointer focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] border-[1px] border-gray-400 appearance-none font-sub text-[14px] max-w-xs" value={formData.name_origin} onChange={updateSelectItems}>
               {
                 nameOriginOptions.map((name) => (
                   <option key={name} value={name}>
@@ -120,7 +114,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main  py-[0.5rem] font-bold">
               Would you like the name to have a specific meaning or theme?
             </h2>
-            <select tabIndex={0} name="meaning" id="meaning" className="cursor-pointer focus:outline-2 focus:outline-gray-300 py-3 px-4 outline-none rounded-full w-[100%] border border-gray-400 bg-[#f8f7ee] font-sub max-w-xs appearance-none text-[14px]" value={formData.meaning} onChange={updateSelectItems}>
+            <select tabIndex={0} name="meaning" id="meaning" className="cursor-pointer focus:outline-2 focus:outline-gray-300 py-3 px-4 outline-none rounded-full w-[100%] border border-gray-400 font-sub max-w-xs appearance-none text-[14px]" value={formData.meaning} onChange={updateSelectItems}>
               {
                 meaningOptions.map((name) => (
                   <option key={name} value={name}>
@@ -173,7 +167,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main py-[0.5rem] font-bold">
               Are there any names you would like to avoid due to personal reasons or associations?
             </h2>
-            <input type="text" name="names_avoid" id="names_avoid" value={formData.names_avoid} onChange={updateInput} placeholder="e.g. Gary, Robyn, Sam" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px]"  />
+            <input type="text" name="names_avoid" id="names_avoid" value={formData.names_avoid} onChange={updateInput} placeholder="e.g. Gary, Robyn, Sam" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full max-w-xs border-[1px] border-gray-400 appearance-none font-sub text-[16px] xl:text-[18px]"  />
           </label>
 
           <div tabIndex={0}  className="flex flex-col font-sub w-[100%]">
@@ -233,7 +227,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
                 id="due_date"
                 value={formData.due_date}
                 onChange={updateInput}
-                className="focus:outline-2 focus:outline-gray-300 outline-none h-[47px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] cursor-pointer appearance-none font-sub text-[14px]"
+                className="focus:outline-2 focus:outline-gray-300 outline-none h-[54px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 cursor-pointer appearance-none font-sub text-[16px] xl:text-[18px]"
               />
               {/* Calendar icon */}
               <div
@@ -254,7 +248,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
           </div>
 
           <button type="submit" className="w-fit px-[1rem] bg-[#6b6ea5] rounded-full self-center text-white font-[700] tracking-tight h-[3rem] min-h-[3rem] text-[14px]">
-            Get the names
+            Generate Names
           </button>
         </form>
       </section>

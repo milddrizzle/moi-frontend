@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { isAlpha, isEmpty } from "validator";
 import isEmail from "validator/lib/isEmail";
+import useRequestContext from "../hooks/use_request_context";
 
 interface UserEmailProps {
     setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -12,35 +13,25 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
         first_name: '',
         email: '',
         first_name_error: '',
-        email_error_name: ''
+        email_error: ''
     })
 
-    const [delay, setDelay] = useState(false)
-
-    if (step === 1) {
-        setTimeout(() => {
-            setDelay(true)
-        }, 5000)
-    }
+    const { loading } = useRequestContext()
 
     const updateInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error_name: "", [event.target.name]: event.target.value })
+        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error: "", [event.target.name]: event.target.value })
     }
 
     const updateInputOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error_name: "", [event.target.name]: event.target.value })
+        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error: "", [event.target.name]: event.target.value })
     }
 
-    const moveToNextStep = () => {
-        setStep(2)
-    }
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
       
         const errors: {
           first_name_error?: string;
-          email_error_name?: string;
+          email_error?: string;
         } = {};
       
         // Check if `first_name` is empty
@@ -53,9 +44,9 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
       
         // Check if `email` is valid
         if (isEmpty(formData.email)) {
-          errors.email_error_name = "Email is required";
+          errors.email_error = "Email is required";
         } else if (!isEmail(formData.email)) {
-          errors.email_error_name = "Enter a valid email address";
+          errors.email_error = "Enter a valid email address";
         }
       
         // If there are errors, update the state
@@ -66,15 +57,35 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
           }));
           return;
         }
+
+        // save user name and email to db
+        try {
+            const response = await fetch("https://moi-backend.onrender.com/user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: formData.first_name, email: formData.email }),
+            });
+
+            // save to local storage too
+            localStorage.setItem('saved_email', 'true')
+
+            if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+        }
       
         // Proceed to the next step if no errors
-        setStep(2);
+        loading ? setStep(2) : setStep(3) // move to different steps depending on whether request has been completed
       };
       
 
 
     return (
-        <section className="flex items-center p-4 md:p-12 shadow-lg flex-col rounded-lg bg-[#f8f7ee] text-black  w-full max-w-2xl min-h-[350px] self-center justify-items-center">
+        <section className="flex items-center p-4 md:p-12 shadow-lg flex-col rounded-lg bg-[#f8f7ee] text-black  w-full max-w-2xl min-h-[400px] self-center justify-items-center">
             <p className="font-sub mb-6">
                 While we search, signup to keep in the loop on all things baby names!
             </p>
@@ -83,14 +94,14 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
                     <div className="flex flex-col md:flex-row justify-normal gap-4">
                         <label className="max-w-xs flex flex-col gap-2 font-sub font-[600] text-[14px] w-[215px]" htmlFor="first_name">
                             First Name
-                            <input onChange={updateInputOnChange} onFocus={updateInputOnFocus} placeholder="Your first name" type="text" name="first_name" id="first_name" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] font-[400] border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px]" />
+                            <input onChange={updateInputOnChange} onFocus={updateInputOnFocus} placeholder="Your first name" type="text" name="first_name" id="first_name" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] font-[400] border-[1px] border-gray-400 appearance-none font-sub text-[16px] xl:text-[18px]" />
                         </label>
                         <label className="max-w-xs flex flex-col gap-2 font-sub font-[600] text-[14px]  w-[215px]" htmlFor="email">
                             Email
-                            <input onChange={updateInputOnChange} onFocus={updateInputOnFocus} placeholder="Your email" type="email" name="email" id="email" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 font-[400] rounded-full w-[100%] border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px]" />
+                            <input onChange={updateInputOnChange} onFocus={updateInputOnFocus} placeholder="Your email" type="email" name="email" id="email" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 font-[400] rounded-full w-[100%] border-[1px] border-gray-400 appearance-none font-sub text-[16px] xl:text-[18px]" />
                         </label>
                     </div>
-                    <button type="submit" className="w-fit px-[1rem] h-[3rem] bg-[#6b6ea5] rounded-full self-center font-[700] text-white tracking-tight text-[14px] md:self-end">
+                    <button type="submit" className="w-fit px-[1rem] h-[3rem] bg-cyan-500 rounded-full text-black md:self-end">
                         Save
                     </button>
                 </div>
@@ -99,21 +110,10 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
                         {formData.first_name_error}
                     </p>
                     <p className="text-sm text-red-700 font-sub">
-                        {formData.email_error_name}
+                        {formData.email_error}
                     </p>
                 </div>
             </form>
-            {
-                delay ? 
-                    <p></p>
-                    : 
-                        <p className="text-center inline">
-                            Searching the galaxy of baby names, just a moment!
-                        <img src="/worm.png" alt="Mother of Invention" className="w-5 m-[1px] inline animate-bounce" />
-                        <img src="/berry.png" alt="Mother of Invention" className="w-4 m-[1px] inline animate-bounce" />
-                        <img src="/apple.png" alt="Mother of Invention" className="w-4 m-[1px] inline animate-bounce" />
-                    </p>
-            }
         </section>
     )
 }
