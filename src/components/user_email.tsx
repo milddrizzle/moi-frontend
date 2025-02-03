@@ -16,7 +16,7 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
         email_error: ''
     })
 
-    const { loading } = useRequestContext()
+    const { setLoading } = useRequestContext()
 
     const updateInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error: "", [event.target.name]: event.target.value })
@@ -71,12 +71,8 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
             // save to local storage too
             localStorage.setItem('saved_email', 'true')
 
-            // Proceed to the next step if no errors
-            loading ? setStep(2) : setStep(3) // move to different steps depending on whether request has been completed
-
-            if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
-            }
+            setLoading(true) // make api request for streaming
+            setStep(2) // move to different steps depending on whether request has been completed
         } catch (error) {
             console.error("Fetch error:", error);
         }

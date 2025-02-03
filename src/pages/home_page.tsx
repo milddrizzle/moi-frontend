@@ -8,7 +8,7 @@ import useRequestContext from "../hooks/use_request_context"
 
 const HomePage = () => {
   const [step, setStep] = useState<number>(0) 
-  const { loading, setLoading, setZodiacSign, setStreamedData, streamedData, formData } = useRequestContext()
+  const { loading, setLoading, setZodiacSign, setStreamedData, streamedData, formData, setIsComplete } = useRequestContext()
 
   const allComponents = [
     <UserForm setStep={setStep} />,
@@ -25,10 +25,12 @@ const HomePage = () => {
         const queryParams = new URLSearchParams(formData as unknown as Record<string, string>).toString();
         const eventSource = new EventSource(`https://moi-backend.onrender.com/generate?${queryParams}`);
 
+        setIsComplete("start")
         eventSource.onmessage = (event) => {
           setLoading(false)
           // Check for special messages 
           if (event.data === '[DONE]') {
+            setIsComplete("finish")
             eventSource.close();
             return;
           }
@@ -44,17 +46,19 @@ const HomePage = () => {
             if (event.data !== "undefined") setStreamedData((prevData) => prevData + event.data);
           }
         };
+
     
         eventSource.onerror = (err) => {
-          console.error('EventSource failed:', err);
           eventSource.close();
           setLoading(false)
+          setIsComplete("finish")
         };
     
         // Cleanup on component unmount
         return () => {
           eventSource.close();
           setLoading(false)
+          setIsComplete("finish")
         };
       }, [loading]);
 

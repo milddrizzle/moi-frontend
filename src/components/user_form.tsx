@@ -46,8 +46,12 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        setLoading(true) // set loading to true to initiate data fetching
-        localStorage.getItem('saved_email') ? setStep(2) : setStep(1) // check if user already has email saved - then move straight to waiting page
+        if (localStorage.getItem('saved_email')) {
+          setLoading(true)
+          setStep(2)}
+        else {
+          setStep(1) 
+        }
     }
 
 
@@ -231,7 +235,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
               />
               {/* Calendar icon */}
               <div
-                className="cursor-pointer text-black absolute bottom-5 right-5"
+                className="cursor-pointer text-black absolute bottom-[18px] right-[18px]"
                 onClick={handleOpenCalendar1}
               >
                 <FaRegCalendar size={14} />
