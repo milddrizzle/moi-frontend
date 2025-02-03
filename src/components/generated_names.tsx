@@ -12,64 +12,31 @@ interface GeneratedNamesProps {
 }
 
 const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
-    const { formData, setFormData, responseData, loading, setLoading } = useRequestContext()
+    const { formData, setFormData, streamedData, loading, setLoading, zodiacSign } = useRequestContext()
+    const [displayList, setDisplayList] = useState<string[]>([])
 
     // hide state while printing
     const [showBtns, setShowBtns] = useState<boolean>(true)
 
-    // list of all the arrays of names generated
-    const [displayList, setDisplayList] = useState<Array<string[]>>([])
+    // Show more names when the "Show More" button is clicked
+    const showMore = () => {
+    setShowBtns(false); // Hide buttons while fetching
 
-    // Update displayList when responseData changes
-    useEffect(() => {
-        if (!responseData || !responseData.names) return; // Ensure responseData exists
-        setShowBtns(false); // Hide buttons while processing
-
-        // Safely update displayList with the first 10 items in a new array
-        setDisplayList((prevList) => [
-        ...prevList,
-            responseData.names.slice(0, 10), // Add a new sub-array with 10 names
-            ]);
-        }, [responseData]);
-
-
-        // Show more names when the "Show More" button is clicked
-        const showMore = () => {
-        setShowBtns(false); // Hide buttons while fetching
-
-        // Check if we have fetched all available names
-        if (displayList.length * 10 >= responseData.names.length) {
-        setLoading(true); //  Fetch new data
-        return;
-        }
-
-        const nextBatch = responseData.names.slice(displayList.length * 10, displayList.length * 10 + 10); // Get the next batch of 10 names
-
-        // Update displayList by pushing the new batch
-        setDisplayList((prevList) => [
-        ...prevList,
-        nextBatch, // Push the next batch as a new sub-array
-        ]);
-  };
-
-
-  // Handle the button visibility after animation delay
-  useEffect(() => {
-    // if we're still fetching data, don't show buttons
-    if (loading) {
-        setShowBtns(false)
-        return
+    // fetch new data
+    setLoading(true)
     }
-    // Restore button visibility after animation delay
-    const timeout = setTimeout(() => {
-      setShowBtns(true);
-    }, 5000);
 
-    return () => clearTimeout(timeout); // Cleanup function to prevent memory leaks
-  }, [showBtns]);
+    useEffect(() => {
+        (displayList.length % 10) !== 0 ? setShowBtns(false) : setShowBtns(true)
+    }, [displayList])
 
 
-
+  useEffect(() => {
+    if (streamedData.length > 0) {
+        const newItems = streamedData?.split("--").map(item => item.trim()).filter(item => item) || [];
+        setDisplayList(newItems.slice(1))
+    }
+  }, [streamedData])
       
     const backToForm = () => {
         setFormData({
@@ -92,15 +59,14 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
     if (formData.due_date) {
         dueDate = formatDate(formData.due_date);
 
-        // Create the string with the format you want
-        item = `${responseData.zodiacSign} (${dueDate})`;
+        item = `${zodiacSign} (${dueDate})`;
     }
 
     
     return (
         <section className="flex items-center p-4 md:p-12 shadow-lg font-main flex-col gap-6 rounded-lg bg-[#f8f7ee] text-black w-full max-w-2xl min-h-[400px]">
             {
-                (displayList.length > 0 && item !== '') ? 
+                (streamedData.length > 0 && item !== '') ? 
                 <div className="flex flex-col w-[100%] gap-2">
                     <h1 className="text-[18px] text-black self-start font-bold">
                         🌟 Here's Your Baby's Astrological Sign:
@@ -116,18 +82,20 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
                 </div> : <></>
             }
             {
-                displayList.length > 0 ? (
+                streamedData.length > 0 ? (
                     <>
                     <h1 className="text-[18px] text-black self-start font-bold">
                         Behold! Enchanting baby names we've found just for you:
                     </h1>
-                    {
-                        displayList.map((list, index) => (
-                            list.length > 0 ? (
-                                <AnimatedList items={list} key={index} />
-                            ) : null
-                        ))
-                    }
+                    <div className="w-[100%] flex flex-col gap-4">
+                        {
+                            displayList.map((item) => (
+                                <p key={item} className="font-sub font-extralight text-left w-[100%]">
+                                    {item}
+                                </p>
+                            ))
+                        }
+                    </div>
                     {
                         showBtns ? <div className="flex gap-3 sm:gap-4 w-[100%] flex-col sm:flex-row justify-center items-center">
                         <button 

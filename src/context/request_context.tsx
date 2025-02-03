@@ -12,17 +12,14 @@ export interface FormDataType {
   version: string;
 }
 
-export interface ResponseDataType {
-  names: string[],
-  zodiacSign: ''
-}
-
 // Define types for the context state
 export interface RequestContextType {
   formData: FormDataType;
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
-  responseData: ResponseDataType
-  setResponseData: React.Dispatch<React.SetStateAction<ResponseDataType>>
+  streamedData: string
+  setStreamedData: React.Dispatch<React.SetStateAction<string>>
+  zodiacSign: string
+  setZodiacSign: React.Dispatch<React.SetStateAction<string>>
   loading: boolean
   setLoading: (loading: boolean) => void
 }
@@ -45,16 +42,15 @@ const RequestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     version: ''
   });
 
-  // state to access response data from db
-  const [responseData, setResponseData] = useState<ResponseDataType>({
-    names: [''],
-    zodiacSign: ''
-  })
+  const [streamedData, setStreamedData] = useState('')
+
+  const [zodiacSign, setZodiacSign] = useState("")
+
 
   // state to indicate loading state of request query
   const [loading, setLoading] = useState(false)
 
-  const value = { formData, setFormData, responseData, setResponseData, loading, setLoading };
+  const value = { formData, setFormData, streamedData, setStreamedData, loading, setLoading, zodiacSign, setZodiacSign };
 
   return (
     <RequestContext.Provider value={value}>

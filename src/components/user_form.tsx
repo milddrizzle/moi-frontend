@@ -99,7 +99,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main py-[0.5rem] font-bold">
               What is your preferred name origin?
             </h2>
-            <select tabIndex={0} name="name_origin" id="name_origin" className="cursor-pointer focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] border-[1px] border-gray-400 appearance-none font-sub text-[14px] max-w-xs" value={formData.name_origin} onChange={updateSelectItems}>
+            <select tabIndex={0} name="name_origin" id="name_origin" className="cursor-pointer focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full w-[100%] border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px] max-w-xs" value={formData.name_origin} onChange={updateSelectItems}>
               {
                 nameOriginOptions.map((name) => (
                   <option key={name} value={name}>
@@ -114,7 +114,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main  py-[0.5rem] font-bold">
               Would you like the name to have a specific meaning or theme?
             </h2>
-            <select tabIndex={0} name="meaning" id="meaning" className="cursor-pointer focus:outline-2 focus:outline-gray-300 py-3 px-4 outline-none rounded-full w-[100%] border border-gray-400 font-sub max-w-xs appearance-none text-[14px]" value={formData.meaning} onChange={updateSelectItems}>
+            <select tabIndex={0} name="meaning" id="meaning" className="cursor-pointer focus:outline-2 focus:outline-gray-300 py-3 px-4 outline-none rounded-full w-[100%] border border-gray-400 bg-[#f8f7ee] font-sub max-w-xs appearance-none text-[14px]" value={formData.meaning} onChange={updateSelectItems}>
               {
                 meaningOptions.map((name) => (
                   <option key={name} value={name}>
@@ -167,7 +167,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
             <h2 className="text-lg font-main py-[0.5rem] font-bold">
               Are there any names you would like to avoid due to personal reasons or associations?
             </h2>
-            <input type="text" name="names_avoid" id="names_avoid" value={formData.names_avoid} onChange={updateInput} placeholder="e.g. Gary, Robyn, Sam" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full max-w-xs border-[1px] border-gray-400 appearance-none font-sub text-[16px] xl:text-[18px]"  />
+            <input type="text" name="names_avoid" id="names_avoid" value={formData.names_avoid} onChange={updateInput} placeholder="e.g. Gary, Robyn, Sam" className="focus:outline-2 focus:outline-gray-300 outline-none py-3 px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] appearance-none font-sub text-[14px]"  />
           </label>
 
           <div tabIndex={0}  className="flex flex-col font-sub w-[100%]">
@@ -227,7 +227,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
                 id="due_date"
                 value={formData.due_date}
                 onChange={updateInput}
-                className="focus:outline-2 focus:outline-gray-300 outline-none h-[54px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 cursor-pointer appearance-none font-sub text-[16px] xl:text-[18px]"
+                className="focus:outline-2 focus:outline-gray-300 outline-none h-[47px] px-4 rounded-full max-w-xs border-[1px] border-gray-400 bg-[#f8f7ee] cursor-pointer appearance-none font-sub text-[14px]"
               />
               {/* Calendar icon */}
               <div
@@ -248,7 +248,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
           </div>
 
           <button type="submit" className="w-fit px-[1rem] bg-[#6b6ea5] rounded-full self-center text-white font-[700] tracking-tight h-[3rem] min-h-[3rem] text-[14px]">
-            Generate Names
+            Get the names
           </button>
         </form>
       </section>

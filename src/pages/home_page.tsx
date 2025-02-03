@@ -8,7 +8,7 @@ import useRequestContext from "../hooks/use_request_context"
 
 const HomePage = () => {
   const [step, setStep] = useState<number>(0) 
-  const { loading, setLoading, formData, setResponseData } = useRequestContext()
+  const { loading, setLoading, setZodiacSign, setStreamedData, streamedData, formData } = useRequestContext()
 
   const allComponents = [
     <UserForm setStep={setStep} />,
@@ -18,35 +18,45 @@ const HomePage = () => {
   ]
 
       // Method to send request only when the loading state becomes true
-    useEffect(() => {
-      if (!loading) return; // Don't do anything if not loading
+      useEffect(() => {
+        // don't send request if we're already sending one
+        if (!loading && streamedData.length < 1) return
 
-      const fetchData = async () => {
-        try {
-          const response = await fetch("https://moi-backend.onrender.com/generate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          });
+        const queryParams = new URLSearchParams(formData as unknown as Record<string, string>).toString();
+        const eventSource = new EventSource(`https://moi-backend.onrender.com/generate?${queryParams}`);
 
-          if (!response.ok) {
-            throw new Error(`Error: ${response.status}`);
+        eventSource.onmessage = (event) => {
+          setLoading(false)
+          // Check for special messages 
+          if (event.data === '[DONE]') {
+            eventSource.close();
+            return;
           }
-
-          const parsedData = await response.json();
-          setResponseData(parsedData); // Store the response data
-          setLoading(false); // Set loading to false after receiving response
-        } catch (error) {
-          console.error("Fetch error:", error);
-          setLoading(true); // Set loading to false even if there's an error
-          console.error("Refetching");
-        }
-      };
-
-      fetchData(); // Fetch data once when loading is true
-    }, [loading, formData, setResponseData, setLoading]);
+    
+          // Check for zodiac sign
+          if (event.data.startsWith('ZODIAC:')) {
+            const zodiac = event.data.replace('ZODIAC:', '').trim();
+            setZodiacSign(zodiac);
+          } else if (event.data.startsWith('ERROR:')) {
+            eventSource.close();
+          } else {
+            // Append each chunk to the streamed data
+            if (event.data !== "undefined") setStreamedData((prevData) => prevData + event.data);
+          }
+        };
+    
+        eventSource.onerror = (err) => {
+          console.error('EventSource failed:', err);
+          eventSource.close();
+          setLoading(false)
+        };
+    
+        // Cleanup on component unmount
+        return () => {
+          eventSource.close();
+          setLoading(false)
+        };
+      }, [loading]);
 
   return (
     <main className="bg-[#6b6ea5] w-[100%] flex p-4 md:p-12 gap-4 items-center font-main flex-col text-white min-h-[100vh] justify-center">
@@ -55,7 +65,7 @@ const HomePage = () => {
         allComponents[step]
       }
       <p className="capitalize font-sub font-medium flex items-center gap-0">
-        <img src="/link_icon.png" alt="MOI" className="w-14 h-14" /> <Link to={'https://motherofinvention.com/'} target="_blank"  className="-translate-x-2 underline">Mother of Invention - Innovative Baby Products</Link>
+        <img src="/Favicon_moi.png" alt="moi" className="w-5 h-5" />&nbsp;<Link to={'https://motherofinvention.com/'} target="_blank"  className="-translate-x-2 underline">Mother of Invention - Innovative Baby Products</Link>
       </p>
     </main>
   )
