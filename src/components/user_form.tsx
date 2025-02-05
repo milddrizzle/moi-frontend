@@ -15,7 +15,9 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
     const handleOpenCalendar1 = () => {
       // Trigger the native input's click event
       if (fromPicker.current) {
-        fromPicker.current.showPicker(); // Only supported in modern browsers
+        try {
+          fromPicker.current.showPicker(); // Only supported in modern browsers
+        } catch (InvalidStateError) {}
       }
     };
 
@@ -46,10 +48,10 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        if (localStorage.getItem('saved_email')) {
+        if (localStorage.getItem('saved_email') === 'true') {
           setLoading(true)
-          setStep(2)}
-        else {
+          setStep(2)
+        } else {
           setStep(1) 
         }
     }

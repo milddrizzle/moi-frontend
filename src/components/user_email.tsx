@@ -9,21 +9,21 @@ interface UserEmailProps {
 }
 
 const UserEmail = ({ step, setStep }: UserEmailProps) => {
-    const [formData, setFormData] = useState({
+    const [userData, setUserData] = useState({
         first_name: '',
         email: '',
         first_name_error: '',
         email_error: ''
     })
 
-    const { setLoading } = useRequestContext()
+    const { formData, setLoading } = useRequestContext()
 
     const updateInputOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error: "", [event.target.name]: event.target.value })
+        event.target.name === "first_name" ? setUserData({ ...userData, first_name_error: "", [event.target.name]: event.target.value }) : setUserData({ ...userData, email_error: "", [event.target.name]: event.target.value })
     }
 
     const updateInputOnFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-        event.target.name === "first_name" ? setFormData({ ...formData, first_name_error: "", [event.target.name]: event.target.value }) : setFormData({ ...formData, email_error: "", [event.target.name]: event.target.value })
+        event.target.name === "first_name" ? setUserData({ ...userData, first_name_error: "", [event.target.name]: event.target.value }) : setUserData({ ...userData, email_error: "", [event.target.name]: event.target.value })
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -35,44 +35,44 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
         } = {};
       
         // Check if `first_name` is empty
-        if (isEmpty(formData.first_name)) {
+        if (isEmpty(userData.first_name)) {
           errors.first_name_error = "First name is required";
-        } else if (!isAlpha(formData.first_name)) {
+        } else if (!isAlpha(userData.first_name)) {
           // Check if `first_name` contains only letters
           errors.first_name_error = "First name should be letters only";
         }
       
         // Check if `email` is valid
-        if (isEmpty(formData.email)) {
+        if (isEmpty(userData.email)) {
           errors.email_error = "Email is required";
-        } else if (!isEmail(formData.email)) {
+        } else if (!isEmail(userData.email)) {
           errors.email_error = "Enter a valid email address";
         }
       
         // If there are errors, update the state
         if (Object.keys(errors).length > 0) {
-          setFormData((prevData) => ({
+          setUserData((prevData) => ({
             ...prevData,
             ...errors,
           }));
           return;
         }
 
+        setLoading(true) // make api request for streaming
+        setStep(2) // move to different steps depending on whether request has been completed
+        
         // save user name and email to db
         try {
-            const response = await fetch("https://moi-backend.onrender.com/user", {
+            await fetch("http://localhost:3900/user", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name: formData.first_name, email: formData.email }),
+            body: JSON.stringify({ name: userData.first_name, email: userData.email, due_date: formData.due_date }),
             });
 
             // save to local storage too
             localStorage.setItem('saved_email', 'true')
-
-            setLoading(true) // make api request for streaming
-            setStep(2) // move to different steps depending on whether request has been completed
         } catch (error) {
             console.error("Fetch error:", error);
         }
@@ -103,10 +103,10 @@ const UserEmail = ({ step, setStep }: UserEmailProps) => {
                 </div>
                 <div className="flex flex-col gap-1 w-[100%] self-start justify-start">
                     <p className="text-sm text-red-700 font-sub">
-                        {formData.first_name_error}
+                        {userData.first_name_error}
                     </p>
                     <p className="text-sm text-red-700 font-sub">
-                        {formData.email_error}
+                        {userData.email_error}
                     </p>
                 </div>
             </form>

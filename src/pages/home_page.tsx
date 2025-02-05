@@ -8,7 +8,7 @@ import useRequestContext from "../hooks/use_request_context"
 
 const HomePage = () => {
   const [step, setStep] = useState<number>(0) 
-  const { loading, setLoading, setZodiacSign, setStreamedData, streamedData, formData, setIsComplete } = useRequestContext()
+  const { loading, setLoading, setStreamedData, streamedData, formData, setIsComplete } = useRequestContext()
 
   const allComponents = [
     <UserForm setStep={setStep} />,
@@ -23,7 +23,7 @@ const HomePage = () => {
         if (!loading && streamedData.length < 1) return
 
         const queryParams = new URLSearchParams(formData as unknown as Record<string, string>).toString();
-        const eventSource = new EventSource(`https://moi-backend.onrender.com/generate?${queryParams}`);
+        const eventSource = new EventSource(`http://localhost:3900/generate?${queryParams}`);
 
         setIsComplete("start")
         eventSource.onmessage = (event) => {
@@ -35,11 +35,7 @@ const HomePage = () => {
             return;
           }
     
-          // Check for zodiac sign
-          if (event.data.startsWith('ZODIAC:')) {
-            const zodiac = event.data.replace('ZODIAC:', '').trim();
-            setZodiacSign(zodiac);
-          } else if (event.data.startsWith('ERROR:')) {
+          if (event.data.startsWith('ERROR:')) {
             eventSource.close();
           } else {
             // Append each chunk to the streamed data

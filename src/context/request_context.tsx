@@ -18,8 +18,6 @@ export interface RequestContextType {
   setFormData: React.Dispatch<React.SetStateAction<FormDataType>>;
   streamedData: string
   setStreamedData: React.Dispatch<React.SetStateAction<string>>
-  zodiacSign: string
-  setZodiacSign: React.Dispatch<React.SetStateAction<string>>
   isComplete: string;
   setIsComplete: React.Dispatch<React.SetStateAction<string>>
   loading: boolean
@@ -46,15 +44,13 @@ const RequestProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   const [streamedData, setStreamedData] = useState('')
 
-  const [zodiacSign, setZodiacSign] = useState("")
-
   const [isComplete, setIsComplete] = useState("start")
 
 
   // state to indicate loading state of request query
   const [loading, setLoading] = useState(false)
 
-  const value = { formData, setFormData, streamedData, setStreamedData, loading, setLoading, zodiacSign, setZodiacSign, isComplete, setIsComplete };
+  const value = { formData, setFormData, streamedData, setStreamedData, loading, setLoading, isComplete, setIsComplete };
 
   return (
     <RequestContext.Provider value={value}>
