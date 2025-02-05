@@ -23,7 +23,7 @@ const HomePage = () => {
         if (!loading && streamedData.length < 1) return
 
         const queryParams = new URLSearchParams(formData as unknown as Record<string, string>).toString();
-        const eventSource = new EventSource(`http://localhost:3900/generate?${queryParams}`);
+        const eventSource = new EventSource(`https://moi-backend-rzqr.onrender.com/generate?${queryParams}`);
 
         setIsComplete("start")
         eventSource.onmessage = (event) => {
