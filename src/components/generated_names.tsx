@@ -40,8 +40,7 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
 
   useEffect(() => {
     if (streamedData.length > 0) {
-        const newItems = streamedData?.split("--").map(item => `- ${item.trim().replaceAll('"', "'")}`).filter(item => item.trim() !== "-") || [];
-        setDisplayList(newItems.slice(1))
+        setDisplayList(streamedData?.split("--").map(item => `- ${item.trim().replaceAll('"', "'")}`).filter(item => item.trim() !== "-") || [])
     }
   }, [streamedData])
       

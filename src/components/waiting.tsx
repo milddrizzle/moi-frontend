@@ -7,12 +7,15 @@ interface WaitingProps {
 }
 
 const Waiting = ({ step, setStep }: WaitingProps) => {
-    const { loading } = useRequestContext()
+    const { streamedData } = useRequestContext()
 
     // move to next screen when loading is set to false
     useEffect(() => {
-        !loading && setStep(3)
-    }, [loading])
+        const data = streamedData.split("--")
+        if (data.length > 2) {
+            setStep(3)
+        }
+    }, [streamedData])
 
 
 
