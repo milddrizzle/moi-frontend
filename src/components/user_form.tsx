@@ -65,7 +65,7 @@ const UserForm = ({setStep}: {setStep: React.Dispatch<React.SetStateAction<numbe
         <form className="w-[100%] flex flex-col gap-[34px]" noValidate onSubmit={handleSubmit}>
           <div tabIndex={0}  className="flex flex-col font-sub max-w-xs">
               <h2 className="text-lg font-main font-bold">
-                What is the baby's gender?
+                What is your baby's gender?
               </h2>
             <div tabIndex={0} className="flex w-[100%] py-[8px] justify-between items-center cursor-pointer" onClick={() => {updateGender("BOY")}} >
               <p className="text-[14px]">

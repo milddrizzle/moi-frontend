@@ -18,9 +18,10 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
 
     const [zodiac, setZodiac] = useState<{
         sign: string;
+        emoji: string;
         description: string,
         gender?: string
-    }>({ sign: "", description: "", gender: ""})
+    }>({ sign: "", emoji: "", description: "", gender: ""})
 
     // Show more names when the "Show More" button is clicked
     const showMore = () => {
@@ -79,7 +80,7 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
             gender = " " + formData.gender.toLocaleLowerCase()
         }
         if (formData.due_date !== "") {
-            setZodiac({ ...zodiac, sign:getZodiacSign(formData.due_date).sign, description: getZodiacSign(formData.due_date).description, gender: gender})
+            setZodiac({ ...zodiac, sign:getZodiacSign(formData.due_date).sign, emoji: getZodiacSign(formData.due_date).emoji, description: getZodiacSign(formData.due_date).description, gender: gender})
         }
     }, [formData.due_date])
 
@@ -91,7 +92,7 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
                 (formData.due_date !== '') &&
                 <>
                     <h1 className="text-[18px] text-black self-start font-bold">
-                        Your baby is {zodiac.sign}{zodiac.gender}:
+                        Your baby is {zodiac.sign}{zodiac.gender}{zodiac.emoji}:
                     </h1>
                     <p className="font-sub font-extralight text-left w-[100%]">
                         {zodiac.description}
@@ -102,7 +103,7 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
                 streamedData.length > 0 ? (
                     <>
                     <h1 className="text-[18px] text-black self-start font-bold">
-                        Behold! Enchanting baby names we've found just for you:
+                        Enchanting baby names we've found just for you:
                     </h1>
                     <div className="w-[100%] flex flex-col gap-4">
                         {
