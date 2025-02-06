@@ -24,10 +24,14 @@ const GeneratedNames = ({ setStep }: GeneratedNamesProps) => {
 
     // Show more names when the "Show More" button is clicked
     const showMore = () => {
-    setShowBtns(false); // Hide buttons while fetching
-
-    // fetch new data
-    setLoading(true)
+        setShowBtns(false); // Hide buttons while fetching
+    
+        const avoidNames = displayList.map((item) => item.split(":")[0].split(" ")[1])
+        avoidNames.push(formData.names_avoid)
+        setFormData({ ...formData, names_avoid: avoidNames.toLocaleString() })
+    
+        // fetch new data
+        setLoading(true)
     }
 
     useEffect(() => {
